@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install zustand socket.io-client)",
+      "Bash(npx next build)"
+    ]
+  }
+}

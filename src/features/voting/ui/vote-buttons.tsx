@@ -1,0 +1,72 @@
+'use client';
+
+import { useState } from 'react';
+import { VoteChoice } from '@/src/shared/types';
+import { useVotingStore } from '../model/voting-store';
+
+type VoteButtonsProps = {
+  optionGood: string;
+  optionEvil: string;
+  topicId: string;
+  disabled?: boolean;
+  onVoted?: () => void;
+};
+
+export function VoteButtons({
+  optionGood,
+  optionEvil,
+  topicId,
+  disabled = false,
+  onVoted,
+}: VoteButtonsProps) {
+  const [selectedChoice, setSelectedChoice] = useState<VoteChoice | null>(null);
+  const vote = useVotingStore((s) => s.vote);
+  const isLoading = useVotingStore((s) => s.isLoading);
+  const hasVoted = useVotingStore((s) => s.hasVoted);
+
+  const isDisabled = disabled || hasVoted || isLoading;
+
+  const handleVote = async (choice: VoteChoice) => {
+    if (isDisabled) return;
+    setSelectedChoice(choice);
+    try {
+      await vote(choice);
+      onVoted?.();
+    } catch {
+      setSelectedChoice(null);
+    }
+  };
+
+  return (
+    <div className="flex w-full gap-3">
+      <button
+        type="button"
+        onClick={() => handleVote(VoteChoice.GOOD)}
+        disabled={isDisabled}
+        className={`flex-1 rounded-xl px-4 py-4 text-sm font-semibold transition-all ${
+          hasVoted && selectedChoice === VoteChoice.GOOD
+            ? 'bg-blue-600 text-white ring-2 ring-blue-400'
+            : hasVoted
+              ? 'bg-gray-100 text-gray-400'
+              : 'bg-blue-50 text-blue-700 hover:bg-blue-100'
+        } disabled:cursor-not-allowed`}
+      >
+        {isLoading && selectedChoice === VoteChoice.GOOD ? '투표 중...' : optionGood}
+      </button>
+      <button
+        type="button"
+        onClick={() => handleVote(VoteChoice.EVIL)}
+        disabled={isDisabled}
+        className={`flex-1 rounded-xl px-4 py-4 text-sm font-semibold transition-all ${
+          hasVoted && selectedChoice === VoteChoice.EVIL
+            ? 'bg-red-600 text-white ring-2 ring-red-400'
+            : hasVoted
+              ? 'bg-gray-100 text-gray-400'
+              : 'bg-red-50 text-red-700 hover:bg-red-100'
+        } disabled:cursor-not-allowed`}
+      >
+        {isLoading && selectedChoice === VoteChoice.EVIL ? '투표 중...' : optionEvil}
+      </button>
+    </div>
+  );
+}
