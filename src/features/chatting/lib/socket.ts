@@ -1,7 +1,5 @@
 import { io, type Socket } from 'socket.io-client';
 
-// TODO: .env.local 파일에 NEXT_PUBLIC_SOCKET_URL 설정 필요
-// 예시: NEXT_PUBLIC_SOCKET_URL=https://your-app.up.railway.app
 const SOCKET_URL = process.env.NEXT_PUBLIC_SOCKET_URL ?? '';
 
 let socket: Socket | null = null;

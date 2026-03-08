@@ -1,8 +1,6 @@
 import { getAccessToken, setTokens, clearTokens, getRefreshToken } from '@/src/shared/lib/auth';
 import type { AuthTokens } from '@/src/shared/types';
 
-// TODO: .env.local 파일에 NEXT_PUBLIC_API_URL 설정 필요
-// 예시: NEXT_PUBLIC_API_URL=https://your-app.up.railway.app
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? '';
 
 type RequestOptions = {
@@ -13,9 +11,6 @@ type RequestOptions = {
 
 function buildUrl(path: string, params?: Record<string, string>): string {
   const url = new URL(path, BASE_URL || 'http://localhost');
-  if (!BASE_URL) {
-    // fallback: construct relative-ish URL when BASE_URL not set
-  }
   if (params) {
     Object.entries(params).forEach(([key, value]) => {
       url.searchParams.set(key, value);
@@ -92,8 +87,9 @@ async function request<T>(method: string, path: string, options: RequestOptions 
     throw new Error(body?.message ?? `API error: ${res.status}`);
   }
 
-  // 204 No Content
-  if (res.status === 204) return undefined as T;
+  // 204 No Content or empty body
+  const contentLength = res.headers.get('content-length');
+  if (res.status === 204 || contentLength === '0') return undefined as T;
 
   return res.json() as Promise<T>;
 }

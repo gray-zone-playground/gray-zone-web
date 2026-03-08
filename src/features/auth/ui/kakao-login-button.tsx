@@ -1,21 +1,16 @@
 'use client';
 
-import { useAuthStore } from '../model/auth-store';
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? '';
 
 export function KakaoLoginButton() {
-  const login = useAuthStore((s) => s.login);
-  const isLoading = useAuthStore((s) => s.isLoading);
-
   const handleClick = () => {
-    // TODO: 카카오 로그인 리다이렉트
-    login();
+    window.location.href = `${API_URL}/auth/kakao`;
   };
 
   return (
     <button
       type="button"
       onClick={handleClick}
-      disabled={isLoading}
       className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#FEE500] px-6 py-3 text-base font-semibold text-[#191919] transition-opacity hover:opacity-90 disabled:opacity-50"
     >
       <svg
@@ -33,7 +28,7 @@ export function KakaoLoginButton() {
           fill="#191919"
         />
       </svg>
-      {isLoading ? '로딩 중...' : '카카오로 시작하기'}
+      카카오로 시작하기
     </button>
   );
 }

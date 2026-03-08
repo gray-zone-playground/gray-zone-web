@@ -1,6 +1,7 @@
 import { create } from 'zustand';
-import type { User } from '@/src/shared/types';
-import { getAccessToken, clearTokens } from '@/src/shared/lib/auth';
+import type { User, AuthTokens } from '@/src/shared/types';
+import { getAccessToken, getRefreshToken, setTokens, clearTokens } from '@/src/shared/lib/auth';
+import { apiPost } from '@/src/shared/api/client';
 import { getMyProfile } from '@/src/entities/user';
 
 type AuthState = {
@@ -11,7 +12,6 @@ type AuthState = {
 };
 
 type AuthActions = {
-  login: () => Promise<void>;
   signup: (nickname: string) => Promise<void>;
   logout: () => Promise<void>;
   fetchUser: () => Promise<void>;
@@ -25,17 +25,11 @@ export const useAuthStore = create<AuthState & AuthActions>((set, get) => ({
   isLoading: false,
   needsSignup: false,
 
-  login: async () => {
-    // TODO: 카카오 로그인 연동
-    // 카카오 OAuth 리다이렉트 URL로 이동
-  },
-
   signup: async (nickname: string) => {
     set({ isLoading: true });
     try {
-      // TODO: POST /auth/signup { nickname }
-      // const tokens = await apiPost<AuthTokens>('/auth/signup', { nickname });
-      // setTokens(tokens);
+      const tokens = await apiPost<AuthTokens>('/auth/signup', { nickname });
+      setTokens(tokens);
       await get().fetchUser();
       set({ needsSignup: false });
     } catch (error) {
@@ -49,8 +43,7 @@ export const useAuthStore = create<AuthState & AuthActions>((set, get) => ({
   logout: async () => {
     set({ isLoading: true });
     try {
-      // TODO: POST /auth/logout
-      // await apiPost('/auth/logout');
+      await apiPost('/auth/logout');
     } catch (error) {
       console.error('Logout failed:', error);
     } finally {
@@ -73,11 +66,16 @@ export const useAuthStore = create<AuthState & AuthActions>((set, get) => ({
   },
 
   checkAuth: async () => {
-    const token = getAccessToken();
-    if (!token) {
+    const accessToken = getAccessToken();
+    const refreshToken = getRefreshToken();
+
+    if (!accessToken && !refreshToken) {
       set({ user: null, isAuthenticated: false });
       return;
     }
+
+    // accessToken이 있으면 바로 유저 정보 조회
+    // 없지만 refreshToken이 있으면 apiClient가 자동으로 refresh 시도
     await get().fetchUser();
   },
 
