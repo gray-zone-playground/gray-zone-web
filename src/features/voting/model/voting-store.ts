@@ -48,8 +48,8 @@ export const useVotingStore = create<VotingState & VotingActions>((set, get) => 
 
   fetchNextTime: async () => {
     try {
-      const { scheduledAt } = await getNextTopicTime();
-      set({ nextScheduledAt: scheduledAt });
+      const result = await getNextTopicTime();
+      set({ nextScheduledAt: result?.scheduledAt ?? null });
     } catch (error) {
       console.error('Failed to fetch next topic time:', error);
     }

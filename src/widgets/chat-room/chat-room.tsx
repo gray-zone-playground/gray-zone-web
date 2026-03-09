@@ -27,21 +27,19 @@ export function ChatRoom({ topicId, canChat }: ChatRoomProps) {
 
   if (!canChat) {
     return (
-      <div className="flex items-center justify-center rounded-2xl border border-gray-200 bg-gray-50 p-8 text-gray-500 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400">
+      <div className="flex items-center justify-center rounded-2xl border border-border bg-gray-100 p-8 text-[14px] text-gray-500">
         투표 참여자만 채팅할 수 있습니다
       </div>
     );
   }
 
   return (
-    <div className="flex h-[500px] flex-col rounded-2xl border border-gray-200 dark:border-gray-700">
-      {/* Messages area */}
-      <div className="flex-1 overflow-y-auto p-4">
+    <div className="flex h-[500px] flex-col rounded-2xl border border-border bg-surface">
+      <div className="chat-scrollbar flex-1 overflow-y-auto p-4">
         <ChatMessageList messages={messages} />
       </div>
 
-      {/* Input area */}
-      <div className="border-t border-gray-200 p-3 dark:border-gray-700">
+      <div className="border-t border-border p-3">
         <ChatInput topicId={topicId} />
       </div>
     </div>

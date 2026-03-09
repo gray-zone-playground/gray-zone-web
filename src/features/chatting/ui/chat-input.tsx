@@ -38,13 +38,13 @@ export function ChatInput({ topicId, disabled = false }: ChatInputProps) {
         onKeyDown={handleKeyDown}
         placeholder={isDisabled ? '채팅이 비활성화되었습니다' : '메시지를 입력하세요...'}
         disabled={isDisabled}
-        className="flex-1 rounded-lg border border-gray-300 px-4 py-2 text-sm outline-none transition-colors focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 disabled:text-gray-400"
+        className="flex-1 rounded-lg border border-gray-200 bg-white px-4 py-2 text-[14px] leading-[1.6] text-gray-800 outline-none transition-colors placeholder:text-gray-400 focus:ring-2 focus:ring-gray-400 disabled:bg-gray-100 disabled:text-gray-400"
       />
       <button
         type="button"
         onClick={handleSend}
         disabled={isDisabled || !message.trim()}
-        className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-50"
+        className="rounded-lg bg-gray-900 px-4 py-2 text-[14px] font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-50"
       >
         전송
       </button>

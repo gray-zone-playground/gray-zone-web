@@ -31,7 +31,7 @@ export function CountdownTimer({ targetDate, onExpired, className = '' }: Countd
   const expired = remaining <= 0;
 
   return (
-    <span className={`font-mono tabular-nums ${expired ? 'text-gray-400 dark:text-gray-500' : ''} ${className}`}>
+    <span className={`font-mono tabular-nums ${expired ? 'text-gray-400' : ''} ${className}`}>
       {expired ? '종료' : formatTime(remaining)}
     </span>
   );

@@ -26,13 +26,11 @@ export function VoteCard({ topic }: VoteCardProps) {
   }, [topic.id, topic.status, fetchResult]);
 
   return (
-    <div className="rounded-2xl bg-white p-6 shadow-lg dark:bg-gray-800">
-      {/* Title */}
-      <h2 className="mb-4 text-lg font-bold text-gray-900 dark:text-white">
+    <div className="rounded-2xl border border-border bg-surface p-6 shadow-sm">
+      <h2 className="mb-4 text-[18px] font-semibold leading-[1.4] text-gray-900">
         {topic.title}
       </h2>
 
-      {/* VOTING status */}
       {topic.status === TopicStatus.VOTING && (
         <div className="space-y-4">
           <VoteButtons
@@ -41,7 +39,7 @@ export function VoteCard({ topic }: VoteCardProps) {
             topicId={topic.id}
           />
 
-          <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
+          <div className="flex items-center justify-between text-[12px] font-medium leading-[1.4] text-gray-500">
             <span>
               남은 시간:{' '}
               <CountdownTimer targetDate={topic.closedAt} />
@@ -53,7 +51,6 @@ export function VoteCard({ topic }: VoteCardProps) {
         </div>
       )}
 
-      {/* CHATTING status */}
       {topic.status === TopicStatus.CHATTING && (
         <div className="space-y-4">
           {result && (
@@ -67,28 +64,26 @@ export function VoteCard({ topic }: VoteCardProps) {
             <Button fullWidth>토론 참여하기</Button>
           </Link>
 
-          <div className="text-center text-sm text-gray-500 dark:text-gray-400">
+          <div className="text-center text-[12px] font-medium leading-[1.4] text-gray-500">
             토론 종료까지:{' '}
             <CountdownTimer targetDate={topic.chatClosedAt} />
           </div>
         </div>
       )}
 
-      {/* SCHEDULED status */}
       {topic.status === TopicStatus.SCHEDULED && (
         <div className="space-y-4">
-          <span className="inline-block rounded-full bg-yellow-100 px-3 py-1 text-xs font-semibold text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200">
+          <span className="inline-block rounded-full bg-warning-100 px-3 py-1 text-[10px] font-medium text-warning-900">
             투표 예정
           </span>
 
-          <div className="text-sm text-gray-500 dark:text-gray-400">
+          <div className="text-[14px] font-normal leading-[1.6] text-gray-500">
             시작까지:{' '}
             <CountdownTimer targetDate={topic.scheduledAt} />
           </div>
         </div>
       )}
 
-      {/* CLOSED status */}
       {topic.status === TopicStatus.CLOSED && (
         <div className="space-y-4">
           {result && (
@@ -98,7 +93,7 @@ export function VoteCard({ topic }: VoteCardProps) {
             />
           )}
 
-          <span className="inline-block rounded-full bg-gray-100 px-3 py-1 text-xs font-semibold text-gray-600 dark:bg-gray-700 dark:text-gray-300">
+          <span className="inline-block rounded-full bg-gray-200 px-3 py-1 text-[10px] font-medium text-gray-600">
             종료됨
           </span>
         </div>

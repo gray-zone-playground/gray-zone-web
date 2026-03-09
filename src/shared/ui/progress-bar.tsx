@@ -14,19 +14,18 @@ export function ProgressBar({ goodCount, evilCount, className = '' }: ProgressBa
   return (
     <div className={`w-full ${className}`}>
       {/* Percentage labels */}
-      <div className="flex justify-between mb-1 text-sm font-medium">
-        <span className="text-blue-600 dark:text-blue-400">{goodPct}%</span>
-        <span className="text-red-600 dark:text-red-400">{evilPct}%</span>
+      <div className="flex justify-between mb-1 text-[12px] font-medium">
+        <span className="text-info-500">{goodPct}%</span>
+        <span className="text-error-500">{evilPct}%</span>
       </div>
 
-      {/* Bar */}
-      <div className="flex h-4 w-full overflow-hidden rounded-full bg-gray-200 dark:bg-gray-700">
+      <div className="flex h-4 w-full overflow-hidden rounded-full bg-gray-200">
         <div
-          className="flex items-center justify-center bg-blue-500 text-[10px] font-bold text-white transition-all duration-500 ease-out dark:bg-blue-400"
+          className="flex items-center justify-center bg-info-500 text-[10px] font-bold text-white transition-all duration-500 ease-out"
           style={{ width: `${goodPct}%` }}
         />
         <div
-          className="flex items-center justify-center bg-red-500 text-[10px] font-bold text-white transition-all duration-500 ease-out dark:bg-red-400"
+          className="flex items-center justify-center bg-error-500 text-[10px] font-bold text-white transition-all duration-500 ease-out"
           style={{ width: `${evilPct}%` }}
         />
       </div>

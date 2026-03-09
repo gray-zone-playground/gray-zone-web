@@ -38,21 +38,25 @@ export const useChatStore = create<ChatState & ChatActions>((set, get) => ({
       set({ isConnected: false });
     });
 
-    socket.on('message', (msg: ChatMessage) => {
+    socket.on('chat:receive', (msg: ChatMessage) => {
       get().addMessage(msg);
     });
 
-    socket.on('chatClosed', () => {
+    socket.on('chat:closed', () => {
       get().setChatClosed();
     });
 
-    socket.emit('join', { topicId });
+    socket.on('chat:error', (err: { message: string }) => {
+      console.error('Chat error:', err.message);
+    });
+
+    socket.emit('chat:join', { topicId });
   },
 
   leaveChat: (topicId: string) => {
     const socket = getSocket();
     if (socket) {
-      socket.emit('leave', { topicId });
+      socket.emit('chat:leave', { topicId });
     }
     disconnectSocket();
     set({ messages: [], isConnected: false });
@@ -61,7 +65,7 @@ export const useChatStore = create<ChatState & ChatActions>((set, get) => ({
   sendMessage: (topicId: string, message: string) => {
     const socket = getSocket();
     if (!socket?.connected) return;
-    socket.emit('message', { topicId, message });
+    socket.emit('chat:send', { topicId, message });
   },
 
   loadMessages: async (topicId: string) => {

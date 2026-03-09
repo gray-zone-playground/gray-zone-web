@@ -52,7 +52,7 @@ export function ResultView({ topicId }: ResultViewProps) {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center py-12 text-gray-500 dark:text-gray-400">
+      <div className="flex items-center justify-center py-12 text-[14px] text-gray-500">
         결과를 불러오는 중...
       </div>
     );
@@ -60,44 +60,40 @@ export function ResultView({ topicId }: ResultViewProps) {
 
   if (!result) {
     return (
-      <div className="flex items-center justify-center py-12 text-gray-500 dark:text-gray-400">
+      <div className="flex items-center justify-center py-12 text-[14px] text-gray-500">
         결과가 없습니다.
       </div>
     );
   }
 
   return (
-    <div className="space-y-6 rounded-2xl bg-white p-6 shadow-lg dark:bg-gray-800">
-      {/* Title */}
+    <div className="space-y-6 rounded-2xl border border-border bg-surface p-6 shadow-sm">
       {currentTopic && (
-        <h2 className="text-lg font-bold text-gray-900 dark:text-white">
+        <h2 className="text-[18px] font-semibold leading-[1.4] text-gray-900">
           {currentTopic.title}
         </h2>
       )}
 
-      {/* Progress bar */}
       <ProgressBar goodCount={result.goodCount} evilCount={result.evilCount} />
 
-      {/* Counts */}
       <div className="grid grid-cols-2 gap-4 text-center">
-        <div className="rounded-xl bg-blue-50 p-4 dark:bg-blue-900/30">
-          <p className="text-sm text-blue-600 dark:text-blue-400">선 (Good)</p>
-          <p className="mt-1 text-2xl font-bold text-blue-700 dark:text-blue-300">
+        <div className="rounded-xl bg-info-100 p-4">
+          <p className="text-[14px] font-normal text-info-500">선 (Good)</p>
+          <p className="mt-1 text-[24px] font-bold leading-[1.35] text-info-900">
             <AnimatedNumber value={result.goodCount} />
           </p>
         </div>
-        <div className="rounded-xl bg-red-50 p-4 dark:bg-red-900/30">
-          <p className="text-sm text-red-600 dark:text-red-400">악 (Evil)</p>
-          <p className="mt-1 text-2xl font-bold text-red-700 dark:text-red-300">
+        <div className="rounded-xl bg-error-100 p-4">
+          <p className="text-[14px] font-normal text-error-500">악 (Evil)</p>
+          <p className="mt-1 text-[24px] font-bold leading-[1.35] text-error-900">
             <AnimatedNumber value={result.evilCount} />
           </p>
         </div>
       </div>
 
-      {/* Total */}
-      <div className="text-center text-sm text-gray-500 dark:text-gray-400">
+      <div className="text-center text-[14px] text-gray-500">
         총 참여자:{' '}
-        <span className="font-semibold text-gray-700 dark:text-gray-200">
+        <span className="font-semibold text-gray-700">
           <AnimatedNumber value={result.totalCount} />
         </span>
         명

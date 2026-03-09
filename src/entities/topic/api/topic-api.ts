@@ -1,28 +1,22 @@
 import { apiGet, apiPost } from '@/src/shared/api/client';
 import type { Topic, TopicResult, VoteChoice } from '@/src/shared/types';
-import { MOCK_TOPICS } from '@/src/shared/mocks/topic-mocks'; // TODO: 백엔드 준비 후 제거
 
 /** Fetch the currently active topic (returns null when no topic is live). */
 export async function getCurrentTopic(): Promise<Topic | null> {
   try {
-    const topic = await apiGet<Topic | null>('/topics/current');
-    if (topic) return topic;
+    return await apiGet<Topic | null>('/topics/current');
   } catch {
-    // API 실패 시 mock fallback
+    return null;
   }
-  return MOCK_TOPICS.find((t) => t.status === 'VOTING') ?? null;
 }
 
 /** Get the scheduled time of the next upcoming topic. */
-export async function getNextTopicTime(): Promise<{ scheduledAt: string }> {
+export async function getNextTopicTime(): Promise<{ scheduledAt: string } | null> {
   try {
-    const result = await apiGet<{ scheduledAt: string }>('/topics/next');
-    if (result?.scheduledAt) return result;
+    return await apiGet<{ scheduledAt: string }>('/topics/next');
   } catch {
-    // API 실패 시 mock fallback
+    return null;
   }
-  const next = MOCK_TOPICS.find((t) => t.status === 'SCHEDULED');
-  return { scheduledAt: next?.scheduledAt ?? new Date(Date.now() + 86400_000).toISOString() };
 }
 
 /** Cast a vote on a topic. */

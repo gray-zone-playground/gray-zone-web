@@ -17,19 +17,19 @@ type ButtonProps = {
 
 const variantStyles: Record<ButtonVariant, string> = {
   primary:
-    'bg-indigo-600 text-white hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 disabled:bg-indigo-300 dark:disabled:bg-indigo-800',
+    'bg-gray-900 text-white hover:bg-gray-800 disabled:bg-gray-300',
   secondary:
-    'bg-gray-200 text-gray-900 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-100 dark:hover:bg-gray-600 disabled:bg-gray-100 dark:disabled:bg-gray-800',
+    'bg-gray-200 text-gray-800 hover:bg-gray-300 disabled:bg-gray-100 disabled:text-gray-400',
   kakao:
     'bg-[#FEE500] text-[#191919] hover:bg-[#FDD800] disabled:bg-[#FEE500]/50',
   danger:
-    'bg-red-600 text-white hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600 disabled:bg-red-300 dark:disabled:bg-red-800',
+    'bg-error-500 text-white hover:bg-[#DC2626] disabled:bg-error-100 disabled:text-error-900',
 };
 
 const sizeStyles: Record<ButtonSize, string> = {
-  sm: 'px-3 py-1.5 text-sm rounded-md',
-  md: 'px-4 py-2 text-base rounded-lg',
-  lg: 'px-6 py-3 text-lg rounded-lg',
+  sm: 'px-3 py-1.5 text-[14px] rounded-md',
+  md: 'px-4 py-2 text-[16px] rounded-lg',
+  lg: 'px-6 py-3 text-[18px] rounded-lg',
 };
 
 export function Button({
@@ -48,8 +48,8 @@ export function Button({
       disabled={disabled}
       onClick={onClick}
       className={`
-        inline-flex items-center justify-center font-medium transition-colors duration-150
-        focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500
+        inline-flex items-center justify-center font-semibold transition-colors duration-150
+        focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400
         disabled:cursor-not-allowed
         ${variantStyles[variant]}
         ${sizeStyles[size]}

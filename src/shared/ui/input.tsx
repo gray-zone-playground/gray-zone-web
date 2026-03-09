@@ -16,7 +16,7 @@ export function Input({ label, error, className = '', id, ...rest }: InputProps)
       {label && (
         <label
           htmlFor={inputId}
-          className="text-sm font-medium text-gray-700 dark:text-gray-300"
+          className="text-[14px] font-medium leading-[1.6] text-gray-700"
         >
           {label}
         </label>
@@ -24,22 +24,18 @@ export function Input({ label, error, className = '', id, ...rest }: InputProps)
       <input
         id={inputId}
         className={`
-          w-full rounded-lg border px-3 py-2 text-sm
-          bg-white text-gray-900 border-gray-300
+          w-full rounded-lg border px-3 py-2 text-[14px] leading-[1.6]
+          bg-white text-gray-800 border-gray-200
           placeholder:text-gray-400
-          focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500
-          disabled:bg-gray-100 disabled:cursor-not-allowed
-          dark:bg-gray-800 dark:text-gray-100 dark:border-gray-600
-          dark:placeholder:text-gray-500
-          dark:focus:ring-indigo-400 dark:focus:border-indigo-400
-          dark:disabled:bg-gray-900
-          ${error ? 'border-red-500 dark:border-red-400 focus:ring-red-500 dark:focus:ring-red-400' : ''}
+          focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-gray-400
+          disabled:bg-gray-100 disabled:cursor-not-allowed disabled:text-gray-400
+          ${error ? 'border-error-500 focus:ring-error-500' : ''}
           ${className}
         `.trim()}
         {...rest}
       />
       {error && (
-        <p className="text-sm text-red-500 dark:text-red-400">{error}</p>
+        <p className="text-[12px] font-medium text-error-500">{error}</p>
       )}
     </div>
   );
