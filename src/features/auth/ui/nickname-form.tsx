@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { useAuthStore } from '../model/auth-store';
 
 const NICKNAME_REGEX = /^[가-힣a-zA-Z0-9]{2,10}$/;
@@ -10,6 +11,7 @@ type NicknameFormProps = {
 };
 
 export function NicknameForm({ kakaoId }: NicknameFormProps) {
+  const router = useRouter();
   const [nickname, setNickname] = useState('');
   const [error, setError] = useState<string | null>(null);
   const signup = useAuthStore((s) => s.signup);
@@ -40,6 +42,7 @@ export function NicknameForm({ kakaoId }: NicknameFormProps) {
     }
     try {
       await signup(kakaoId, nickname);
+      router.replace('/');
     } catch {
       setError('회원가입에 실패했습니다. 다시 시도해주세요.');
     }

@@ -4,7 +4,8 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL ?? '';
 
 export function KakaoLoginButton() {
   const handleClick = () => {
-    window.location.href = `${API_URL}/auth/kakao`;
+    const redirectUrl = encodeURIComponent(window.location.origin);
+    window.location.href = `${API_URL}/auth/kakao?redirectUrl=${redirectUrl}`;
   };
 
   return (
