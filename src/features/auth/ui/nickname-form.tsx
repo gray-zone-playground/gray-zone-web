@@ -7,10 +7,10 @@ import { useAuthStore } from '../model/auth-store';
 const NICKNAME_REGEX = /^[가-힣a-zA-Z0-9]{2,10}$/;
 
 type NicknameFormProps = {
-  kakaoId: string;
+  signupToken: string;
 };
 
-export function NicknameForm({ kakaoId }: NicknameFormProps) {
+export function NicknameForm({ signupToken }: NicknameFormProps) {
   const router = useRouter();
   const [nickname, setNickname] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -41,7 +41,7 @@ export function NicknameForm({ kakaoId }: NicknameFormProps) {
       return;
     }
     try {
-      await signup(kakaoId, nickname);
+      await signup(signupToken, nickname);
       router.replace('/');
     } catch {
       setError('회원가입에 실패했습니다. 다시 시도해주세요.');

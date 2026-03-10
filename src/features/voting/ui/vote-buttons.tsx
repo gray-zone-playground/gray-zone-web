@@ -7,7 +7,6 @@ import { useVotingStore } from '../model/voting-store';
 type VoteButtonsProps = {
   optionGood: string;
   optionEvil: string;
-  topicId: string;
   disabled?: boolean;
   onVoted?: () => void;
 };
@@ -15,7 +14,6 @@ type VoteButtonsProps = {
 export function VoteButtons({
   optionGood,
   optionEvil,
-  topicId,
   disabled = false,
   onVoted,
 }: VoteButtonsProps) {

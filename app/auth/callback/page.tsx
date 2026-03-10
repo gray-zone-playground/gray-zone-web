@@ -20,9 +20,17 @@ function AuthCallbackContent() {
     }
 
     setTokens({ accessToken, refreshToken });
-    fetchUser().then(() => {
-      router.replace('/');
-    });
+
+    // URL에서 토큰 제거 (브라우저 히스토리 노출 방지)
+    window.history.replaceState(null, '', '/auth/callback');
+
+    fetchUser()
+      .then(() => {
+        router.replace('/');
+      })
+      .catch(() => {
+        router.replace('/login');
+      });
   }, [searchParams, router, fetchUser]);
 
   return (

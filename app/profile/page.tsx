@@ -13,6 +13,7 @@ export default function ProfilePage() {
   const { user, isAuthenticated, isLoading, logout, fetchUser } = useAuthStore();
   const [nickname, setNickname] = useState("");
   const [isUpdating, setIsUpdating] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
@@ -31,11 +32,13 @@ export default function ProfilePage() {
   const handleUpdateNickname = async () => {
     if (!nickname.trim() || nickname === user.nickname) return;
     setIsUpdating(true);
+    setErrorMessage(null);
     try {
       await updateNickname(nickname.trim());
       await fetchUser();
     } catch (error) {
-      console.error("Failed to update nickname:", error);
+      const message = error instanceof Error ? error.message : "닉네임 변경에 실패했습니다.";
+      setErrorMessage(message);
     } finally {
       setIsUpdating(false);
     }
@@ -57,7 +60,8 @@ export default function ProfilePage() {
       await logout();
       router.replace("/login");
     } catch (error) {
-      console.error("Failed to delete account:", error);
+      const message = error instanceof Error ? error.message : "회원 탈퇴에 실패했습니다.";
+      setErrorMessage(message);
     }
   };
 
@@ -87,6 +91,12 @@ export default function ProfilePage() {
             </div>
           </div>
         </section>
+
+        {errorMessage && (
+          <div className="mt-4 rounded-lg border border-error-500 bg-error-100 p-3 text-[14px] text-error-900">
+            {errorMessage}
+          </div>
+        )}
 
         {/* Nickname Change */}
         <section className="mt-4 rounded-lg border border-border bg-surface p-6">

@@ -30,6 +30,13 @@ export const useChatStore = create<ChatState & ChatActions>((set, get) => ({
 
     const socket = connectSocket(token);
 
+    // 기존 리스너 제거 후 등록 (중복 방지)
+    socket.off('connect');
+    socket.off('disconnect');
+    socket.off('chat:receive');
+    socket.off('chat:closed');
+    socket.off('chat:error');
+
     socket.on('connect', () => {
       set({ isConnected: true });
     });
@@ -57,6 +64,11 @@ export const useChatStore = create<ChatState & ChatActions>((set, get) => ({
     const socket = getSocket();
     if (socket) {
       socket.emit('chat:leave', { topicId });
+      socket.off('connect');
+      socket.off('disconnect');
+      socket.off('chat:receive');
+      socket.off('chat:closed');
+      socket.off('chat:error');
     }
     disconnectSocket();
     set({ messages: [], isConnected: false });

@@ -12,7 +12,7 @@ type AuthState = {
 };
 
 type AuthActions = {
-  signup: (kakaoId: string, nickname: string) => Promise<void>;
+  signup: (signupToken: string, nickname: string) => Promise<void>;
   logout: () => Promise<void>;
   fetchUser: () => Promise<void>;
   checkAuth: () => Promise<void>;
@@ -25,10 +25,11 @@ export const useAuthStore = create<AuthState & AuthActions>((set, get) => ({
   isLoading: false,
   needsSignup: false,
 
-  signup: async (kakaoId: string, nickname: string) => {
+  signup: async (signupToken: string, nickname: string) => {
     set({ isLoading: true });
     try {
-      const tokens = await apiPost<AuthTokens>('/auth/signup', { kakaoId, nickname });
+      const tokens = await apiPost<AuthTokens>('/auth/signup', { signupToken, nickname });
+      console.log('[signup] accessToken:', tokens.accessToken);
       setTokens(tokens);
       await get().fetchUser();
       set({ needsSignup: false });

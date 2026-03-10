@@ -5,7 +5,8 @@ import type { Topic, TopicResult, VoteChoice } from '@/src/shared/types';
 export async function getCurrentTopic(): Promise<Topic | null> {
   try {
     return await apiGet<Topic | null>('/topics/current');
-  } catch {
+  } catch (error) {
+    console.error('Failed to fetch current topic:', error);
     return null;
   }
 }
@@ -14,7 +15,8 @@ export async function getCurrentTopic(): Promise<Topic | null> {
 export async function getNextTopicTime(): Promise<{ scheduledAt: string } | null> {
   try {
     return await apiGet<{ scheduledAt: string }>('/topics/next');
-  } catch {
+  } catch (error) {
+    console.error('Failed to fetch next topic time:', error);
     return null;
   }
 }

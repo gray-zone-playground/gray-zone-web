@@ -84,12 +84,13 @@ async function request<T>(method: string, path: string, options: RequestOptions 
 
   if (!res.ok) {
     const body = await res.json().catch(() => null);
-    throw new Error(body?.message ?? `API error: ${res.status}`);
+    const message = body?.message ?? `요청에 실패했습니다 (${res.status})`;
+    throw new Error(message);
   }
 
   // 204 No Content or empty body
   const contentLength = res.headers.get('content-length');
-  if (res.status === 204 || contentLength === '0') return undefined as T;
+  if (res.status === 204 || contentLength === '0') return undefined as never;
 
   return res.json() as Promise<T>;
 }

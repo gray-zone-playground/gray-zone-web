@@ -7,15 +7,15 @@ import { NicknameForm } from "@/src/features/auth";
 function SignupContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const kakaoId = searchParams.get("kakaoId");
+  const signupToken = searchParams.get("signupToken");
 
   useEffect(() => {
-    if (!kakaoId) {
+    if (!signupToken) {
       router.replace("/login");
     }
-  }, [kakaoId, router]);
+  }, [signupToken, router]);
 
-  if (!kakaoId) return null;
+  if (!signupToken) return null;
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-background px-4">
@@ -29,7 +29,7 @@ function SignupContent() {
           </p>
         </div>
 
-        <NicknameForm kakaoId={kakaoId} />
+        <NicknameForm signupToken={signupToken} />
       </div>
     </div>
   );

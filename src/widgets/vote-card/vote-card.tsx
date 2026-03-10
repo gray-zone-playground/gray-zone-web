@@ -36,7 +36,6 @@ export function VoteCard({ topic }: VoteCardProps) {
           <VoteButtons
             optionGood={topic.optionGood}
             optionEvil={topic.optionEvil}
-            topicId={topic.id}
           />
 
           <div className="flex items-center justify-between text-[12px] font-medium leading-[1.4] text-caption">
