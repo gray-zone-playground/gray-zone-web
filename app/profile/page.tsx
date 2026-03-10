@@ -14,6 +14,17 @@ export default function ProfilePage() {
   const [nickname, setNickname] = useState("");
   const [isUpdating, setIsUpdating] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [nicknameError, setNicknameError] = useState<string | null>(null);
+
+  const NICKNAME_REGEX = /^[가-힣a-zA-Z0-9]{2,20}$/;
+
+  const validateNickname = (value: string): string | null => {
+    if (value.length === 0) return "닉네임을 입력해주세요.";
+    if (value.length < 2) return "닉네임은 2자 이상이어야 합니다.";
+    if (value.length > 20) return "닉네임은 20자 이하여야 합니다.";
+    if (!NICKNAME_REGEX.test(value)) return "한글, 영문, 숫자만 사용할 수 있습니다.";
+    return null;
+  };
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
@@ -30,9 +41,15 @@ export default function ProfilePage() {
   if (!isAuthenticated || !user) return null;
 
   const handleUpdateNickname = async () => {
-    if (!nickname.trim() || nickname === user.nickname) return;
+    const validationError = validateNickname(nickname.trim());
+    if (validationError) {
+      setNicknameError(validationError);
+      return;
+    }
+    if (nickname.trim() === user.nickname) return;
     setIsUpdating(true);
     setErrorMessage(null);
+    setNicknameError(null);
     try {
       await updateNickname(nickname.trim());
       await fetchUser();
@@ -103,19 +120,28 @@ export default function ProfilePage() {
           <h2 className="mb-4 text-[18px] font-semibold leading-[1.4] text-heading">
             닉네임 변경
           </h2>
-          <div className="flex gap-2">
-            <Input
-              value={nickname}
-              onChange={(e) => setNickname(e.target.value)}
-              placeholder="새 닉네임"
-              className="flex-1"
-            />
-            <Button
-              onClick={handleUpdateNickname}
-              disabled={isUpdating || !nickname.trim() || nickname === user.nickname}
-            >
-              {isUpdating ? "변경 중..." : "변경"}
-            </Button>
+          <div className="flex flex-col gap-2">
+            <div className="flex gap-2">
+              <Input
+                value={nickname}
+                onChange={(e) => {
+                  setNickname(e.target.value);
+                  if (nicknameError) setNicknameError(validateNickname(e.target.value));
+                }}
+                placeholder="한글/영문/숫자 2-20자"
+                maxLength={20}
+                className="flex-1"
+              />
+              <Button
+                onClick={handleUpdateNickname}
+                disabled={isUpdating || !nickname.trim() || nickname === user.nickname}
+              >
+                {isUpdating ? "변경 중..." : "변경"}
+              </Button>
+            </div>
+            {nicknameError && (
+              <p className="text-[12px] font-medium text-error-500">{nicknameError}</p>
+            )}
           </div>
         </section>
 

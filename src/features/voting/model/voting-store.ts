@@ -2,22 +2,21 @@ import { create } from 'zustand';
 import type { Topic, TopicResult, VoteChoice } from '@/src/shared/types';
 import {
   getCurrentTopic,
-  getNextTopicTime,
+  getNextTopic,
   voteTopic,
   getTopicResult,
 } from '@/src/entities/topic';
 
 type VotingState = {
   currentTopic: Topic | null;
-  nextScheduledAt: string | null;
+  nextTopic: Topic | null;
   isLoading: boolean;
-  hasVoted: boolean;
   result: TopicResult | null;
 };
 
 type VotingActions = {
   fetchCurrentTopic: () => Promise<void>;
-  fetchNextTime: () => Promise<void>;
+  fetchNextTopic: () => Promise<void>;
   vote: (choice: VoteChoice) => Promise<void>;
   fetchResult: (topicId: string) => Promise<void>;
   reset: () => void;
@@ -25,9 +24,8 @@ type VotingActions = {
 
 const initialState: VotingState = {
   currentTopic: null,
-  nextScheduledAt: null,
+  nextTopic: null,
   isLoading: false,
-  hasVoted: false,
   result: null,
 };
 
@@ -46,12 +44,12 @@ export const useVotingStore = create<VotingState & VotingActions>((set, get) => 
     }
   },
 
-  fetchNextTime: async () => {
+  fetchNextTopic: async () => {
     try {
-      const result = await getNextTopicTime();
-      set({ nextScheduledAt: result?.scheduledAt ?? null });
+      const topic = await getNextTopic();
+      set({ nextTopic: topic });
     } catch (error) {
-      console.error('Failed to fetch next topic time:', error);
+      console.error('Failed to fetch next topic:', error);
     }
   },
 
@@ -62,7 +60,7 @@ export const useVotingStore = create<VotingState & VotingActions>((set, get) => 
     set({ isLoading: true });
     try {
       await voteTopic(topic.id, choice);
-      set({ hasVoted: true });
+      set({ currentTopic: { ...topic, myVote: choice } });
     } catch (error) {
       console.error('Failed to vote:', error);
       throw error;

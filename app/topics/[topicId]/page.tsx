@@ -15,7 +15,7 @@ export default function TopicDetailPage() {
   const router = useRouter();
   const topicId = params.topicId as string;
 
-  const { currentTopic, hasVoted, result, isLoading, fetchResult, fetchCurrentTopic } =
+  const { currentTopic, isLoading, fetchResult, fetchCurrentTopic } =
     useVotingStore();
   const [isClosed, setIsClosed] = useState(false);
 
@@ -25,7 +25,9 @@ export default function TopicDetailPage() {
   }, [topicId, fetchResult, fetchCurrentTopic]);
 
   const canChat =
-    hasVoted && currentTopic?.status === TopicStatus.CHATTING;
+    currentTopic?.myVote !== null &&
+    currentTopic?.myVote !== undefined &&
+    currentTopic?.status === TopicStatus.CHATTING;
 
   useEffect(() => {
     if (currentTopic?.status === TopicStatus.CLOSED) {
@@ -67,10 +69,10 @@ export default function TopicDetailPage() {
               </div>
             ) : (
               <>
-                {currentTopic?.chatClosedAt && canChat && (
+                {currentTopic?.chattingEndsAt && canChat && (
                   <div className="mt-4 flex items-center justify-center gap-2">
                     <span className="text-xs text-muted">채팅 종료까지</span>
-                    <CountdownTimer targetDate={currentTopic.chatClosedAt} />
+                    <CountdownTimer targetDate={currentTopic.chattingEndsAt} />
                   </div>
                 )}
 

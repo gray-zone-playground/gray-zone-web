@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '../model/auth-store';
 
-const NICKNAME_REGEX = /^[가-힣a-zA-Z0-9]{2,10}$/;
+const NICKNAME_REGEX = /^[가-힣a-zA-Z0-9]{2,20}$/;
 
 type NicknameFormProps = {
   signupToken: string;
@@ -20,7 +20,7 @@ export function NicknameForm({ signupToken }: NicknameFormProps) {
   const validate = (value: string): string | null => {
     if (value.length === 0) return '닉네임을 입력해주세요.';
     if (value.length < 2) return '닉네임은 2자 이상이어야 합니다.';
-    if (value.length > 10) return '닉네임은 10자 이하여야 합니다.';
+    if (value.length > 20) return '닉네임은 20자 이하여야 합니다.';
     if (!NICKNAME_REGEX.test(value)) return '한글, 영문, 숫자만 사용할 수 있습니다.';
     return null;
   };
@@ -59,8 +59,8 @@ export function NicknameForm({ signupToken }: NicknameFormProps) {
           type="text"
           value={nickname}
           onChange={handleChange}
-          placeholder="한글/영문/숫자 2-10자"
-          maxLength={10}
+          placeholder="한글/영문/숫자 2-20자"
+          maxLength={20}
           className={`rounded-lg border bg-surface px-4 py-3 text-[14px] leading-[1.6] text-foreground outline-none transition-colors placeholder:text-muted focus:ring-2 focus:ring-muted ${
             error ? 'border-error-500' : 'border-border'
           }`}

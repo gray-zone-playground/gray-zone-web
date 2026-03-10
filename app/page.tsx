@@ -8,7 +8,7 @@ import { CountdownTimer } from "@/src/shared/ui";
 import { useVotingStore } from "@/src/features/voting";
 
 export default function Home() {
-  const { currentTopic, nextScheduledAt, isLoading, fetchCurrentTopic, fetchNextTime } =
+  const { currentTopic, nextTopic, isLoading, fetchCurrentTopic, fetchNextTopic } =
     useVotingStore();
   const [activeTab, setActiveTab] = useState(() => {
     const hour = new Date().getHours();
@@ -19,8 +19,8 @@ export default function Home() {
 
   useEffect(() => {
     fetchCurrentTopic();
-    fetchNextTime();
-  }, [fetchCurrentTopic, fetchNextTime]);
+    fetchNextTopic();
+  }, [fetchCurrentTopic, fetchNextTopic]);
 
   return (
     <div className="min-h-screen bg-background">
@@ -37,10 +37,10 @@ export default function Home() {
             <p className="text-[14px] text-caption">
               현재 진행 중인 투표가 없습니다
             </p>
-            {nextScheduledAt && (
+            {nextTopic && (
               <div className="flex flex-col items-center gap-2">
                 <p className="text-[12px] text-caption">다음 투표까지</p>
-                <CountdownTimer targetDate={nextScheduledAt} />
+                <CountdownTimer targetDate={nextTopic.scheduledAt} />
               </div>
             )}
           </div>

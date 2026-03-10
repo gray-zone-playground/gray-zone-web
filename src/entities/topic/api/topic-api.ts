@@ -1,7 +1,7 @@
 import { apiGet, apiPost } from '@/src/shared/api/client';
 import type { Topic, TopicResult, VoteChoice } from '@/src/shared/types';
 
-/** Fetch the currently active topic (returns null when no topic is live). */
+/** Fetch the currently active topic (VOTING or CHATTING). */
 export async function getCurrentTopic(): Promise<Topic | null> {
   try {
     return await apiGet<Topic | null>('/topics/current');
@@ -11,12 +11,12 @@ export async function getCurrentTopic(): Promise<Topic | null> {
   }
 }
 
-/** Get the scheduled time of the next upcoming topic. */
-export async function getNextTopicTime(): Promise<{ scheduledAt: string } | null> {
+/** Get the next scheduled topic. */
+export async function getNextTopic(): Promise<Topic | null> {
   try {
-    return await apiGet<{ scheduledAt: string }>('/topics/next');
+    return await apiGet<Topic | null>('/topics/next');
   } catch (error) {
-    console.error('Failed to fetch next topic time:', error);
+    console.error('Failed to fetch next topic:', error);
     return null;
   }
 }

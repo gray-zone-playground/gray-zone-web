@@ -1,6 +1,6 @@
 export {
   getCurrentTopic,
-  getNextTopicTime,
+  getNextTopic,
   voteTopic,
   getTopicResult,
 } from './api/topic-api';

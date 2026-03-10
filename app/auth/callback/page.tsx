@@ -19,6 +19,7 @@ function AuthCallbackContent() {
       return;
     }
 
+    console.log('[login] accessToken:', accessToken);
     setTokens({ accessToken, refreshToken });
 
     // URL에서 토큰 제거 (브라우저 히스토리 노출 방지)

@@ -6,9 +6,9 @@ export async function getMyProfile(): Promise<User> {
   return apiGet<User>('/users/me');
 }
 
-/** Update the current user's nickname. */
-export async function updateNickname(nickname: string): Promise<void> {
-  await apiPatch<void>('/users/me/nickname', { nickname });
+/** Update the current user's nickname. Returns updated user. */
+export async function updateNickname(nickname: string): Promise<User> {
+  return apiPatch<User>('/users/me/nickname', { nickname });
 }
 
 /** Permanently delete the current user's account. */

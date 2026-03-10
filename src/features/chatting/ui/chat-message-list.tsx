@@ -35,7 +35,7 @@ export function ChatMessageList({ messages }: ChatMessageListProps) {
       {messages.map((msg) => (
         <div key={msg.id} className="flex items-start gap-2">
           <span className="shrink-0 text-[14px] font-semibold text-foreground">
-            {msg.nickname}
+            {msg.user.nickname}
           </span>
           <span className="text-[14px] text-foreground">{msg.message}</span>
           <span className="ml-auto shrink-0 text-[10px] text-muted">

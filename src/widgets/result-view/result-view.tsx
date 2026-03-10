@@ -44,7 +44,6 @@ export function ResultView({ topicId }: ResultViewProps) {
   const result = useVotingStore((s) => s.result);
   const isLoading = useVotingStore((s) => s.isLoading);
   const fetchResult = useVotingStore((s) => s.fetchResult);
-  const currentTopic = useVotingStore((s) => s.currentTopic);
 
   useEffect(() => {
     fetchResult(topicId);
@@ -68,25 +67,23 @@ export function ResultView({ topicId }: ResultViewProps) {
 
   return (
     <div className="space-y-6 rounded-2xl border border-border bg-surface p-6 shadow-sm">
-      {currentTopic && (
-        <h2 className="text-[18px] font-semibold leading-[1.4] text-heading">
-          {currentTopic.title}
-        </h2>
-      )}
+      <h2 className="text-[18px] font-semibold leading-[1.4] text-heading">
+        {result.title}
+      </h2>
 
-      <ProgressBar goodCount={result.goodCount} evilCount={result.evilCount} />
+      <ProgressBar goodCount={result.good.count} evilCount={result.evil.count} />
 
       <div className="grid grid-cols-2 gap-4 text-center">
         <div className="rounded-xl bg-info-100 p-4">
           <p className="text-[14px] font-normal text-info-500">선 (Good)</p>
           <p className="mt-1 text-[24px] font-bold leading-[1.35] text-info-900">
-            <AnimatedNumber value={result.goodCount} />
+            <AnimatedNumber value={result.good.count} />
           </p>
         </div>
         <div className="rounded-xl bg-error-100 p-4">
           <p className="text-[14px] font-normal text-error-500">악 (Evil)</p>
           <p className="mt-1 text-[24px] font-bold leading-[1.35] text-error-900">
-            <AnimatedNumber value={result.evilCount} />
+            <AnimatedNumber value={result.evil.count} />
           </p>
         </div>
       </div>
@@ -94,7 +91,7 @@ export function ResultView({ topicId }: ResultViewProps) {
       <div className="text-center text-[14px] text-caption">
         총 참여자:{' '}
         <span className="font-semibold text-foreground">
-          <AnimatedNumber value={result.totalCount} />
+          <AnimatedNumber value={result.total} />
         </span>
         명
       </div>

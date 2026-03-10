@@ -12,18 +12,21 @@ type VoteCardProps = {
 };
 
 export function VoteCard({ topic }: VoteCardProps) {
-  const hasVoted = useVotingStore((s) => s.hasVoted);
   const result = useVotingStore((s) => s.result);
   const fetchResult = useVotingStore((s) => s.fetchResult);
 
+  const hasVoted = topic.myVote !== null;
+
   useEffect(() => {
+    // 투표 완료 상태이거나, CHATTING/CLOSED면 결과 조회
     if (
+      hasVoted ||
       topic.status === TopicStatus.CHATTING ||
       topic.status === TopicStatus.CLOSED
     ) {
       fetchResult(topic.id);
     }
-  }, [topic.id, topic.status, fetchResult]);
+  }, [topic.id, topic.status, hasVoted, fetchResult]);
 
   return (
     <div className="rounded-2xl border border-border bg-surface p-6 shadow-sm">
@@ -31,21 +34,37 @@ export function VoteCard({ topic }: VoteCardProps) {
         {topic.title}
       </h2>
 
-      {topic.status === TopicStatus.VOTING && (
+      {topic.status === TopicStatus.VOTING && !hasVoted && (
         <div className="space-y-4">
           <VoteButtons
             optionGood={topic.optionGood}
             optionEvil={topic.optionEvil}
           />
 
+          <div className="text-[12px] font-medium leading-[1.4] text-caption">
+            <span>
+              남은 시간:{' '}
+              <CountdownTimer targetDate={topic.votingEndsAt} />
+            </span>
+          </div>
+        </div>
+      )}
+
+      {topic.status === TopicStatus.VOTING && hasVoted && (
+        <div className="space-y-4">
+          {result && (
+            <ProgressBar
+              goodCount={result.good.count}
+              evilCount={result.evil.count}
+            />
+          )}
+
           <div className="flex items-center justify-between text-[12px] font-medium leading-[1.4] text-caption">
             <span>
               남은 시간:{' '}
-              <CountdownTimer targetDate={topic.closedAt} />
+              <CountdownTimer targetDate={topic.votingEndsAt} />
             </span>
-            {hasVoted && result && (
-              <span>총 {result.totalCount}표</span>
-            )}
+            {result && <span>총 {result.total}표</span>}
           </div>
         </div>
       )}
@@ -54,8 +73,8 @@ export function VoteCard({ topic }: VoteCardProps) {
         <div className="space-y-4">
           {result && (
             <ProgressBar
-              goodCount={result.goodCount}
-              evilCount={result.evilCount}
+              goodCount={result.good.count}
+              evilCount={result.evil.count}
             />
           )}
 
@@ -65,7 +84,7 @@ export function VoteCard({ topic }: VoteCardProps) {
 
           <div className="text-center text-[12px] font-medium leading-[1.4] text-caption">
             토론 종료까지:{' '}
-            <CountdownTimer targetDate={topic.chatClosedAt} />
+            <CountdownTimer targetDate={topic.chattingEndsAt} />
           </div>
         </div>
       )}
@@ -87,8 +106,8 @@ export function VoteCard({ topic }: VoteCardProps) {
         <div className="space-y-4">
           {result && (
             <ProgressBar
-              goodCount={result.goodCount}
-              evilCount={result.evilCount}
+              goodCount={result.good.count}
+              evilCount={result.evil.count}
             />
           )}
 
