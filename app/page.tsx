@@ -46,7 +46,7 @@ export default function Home() {
           </div>
         )}
 
-        <div className="mt-6">
+        <div className="mt-6 flex justify-center">
           <TopicTabs activeIndex={activeTab} onTabChange={setActiveTab} />
         </div>
       </main>
