@@ -6,9 +6,11 @@ import { VoteCard } from "@/src/widgets/vote-card";
 import { TopicTabs } from "@/src/widgets/topic-tabs";
 import { CountdownTimer } from "@/src/shared/ui";
 import { useVotingStore } from "@/src/features/voting";
+import { useAuthStore } from "@/src/features/auth";
 
 export default function Home() {
-  const { currentTopic, nextTopic, isLoading, fetchCurrentTopic, fetchNextTopic } =
+  const authReady = useAuthStore((s) => s.authReady);
+  const { currentTopic, nextTopic, isTopicLoading, fetchCurrentTopic, fetchNextTopic } =
     useVotingStore();
   const [activeTab, setActiveTab] = useState(() => {
     const hour = new Date().getHours();
@@ -17,16 +19,18 @@ export default function Home() {
     return 2;
   });
 
+  // 인증 상태 확인 후 토픽 fetch (myVote를 정확히 받기 위해)
   useEffect(() => {
+    if (!authReady) return;
     fetchCurrentTopic();
     fetchNextTopic();
-  }, [fetchCurrentTopic, fetchNextTopic]);
+  }, [authReady, fetchCurrentTopic, fetchNextTopic]);
 
   return (
     <div className="min-h-screen bg-background">
       <GNB />
       <main className="mx-auto max-w-lg px-4 py-6">
-        {isLoading ? (
+        {!authReady || isTopicLoading ? (
           <div className="flex items-center justify-center py-20">
             <div className="text-[14px] text-caption">Loading...</div>
           </div>

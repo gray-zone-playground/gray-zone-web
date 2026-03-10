@@ -15,7 +15,7 @@ export default function TopicDetailPage() {
   const router = useRouter();
   const topicId = params.topicId as string;
 
-  const { currentTopic, isLoading, fetchResult, fetchCurrentTopic } =
+  const { currentTopic, isTopicLoading, fetchResult, fetchCurrentTopic } =
     useVotingStore();
   const [isClosed, setIsClosed] = useState(false);
 
@@ -50,7 +50,7 @@ export default function TopicDetailPage() {
           &larr; 홈으로
         </Link>
 
-        {isLoading ? (
+        {isTopicLoading ? (
           <div className="flex items-center justify-center py-20">
             <div className="text-muted text-sm">Loading...</div>
           </div>

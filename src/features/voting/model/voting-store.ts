@@ -10,7 +10,9 @@ import {
 type VotingState = {
   currentTopic: Topic | null;
   nextTopic: Topic | null;
-  isLoading: boolean;
+  isTopicLoading: boolean;
+  isVoting: boolean;
+  isResultLoading: boolean;
   result: TopicResult | null;
 };
 
@@ -25,7 +27,9 @@ type VotingActions = {
 const initialState: VotingState = {
   currentTopic: null,
   nextTopic: null,
-  isLoading: false,
+  isTopicLoading: false,
+  isVoting: false,
+  isResultLoading: false,
   result: null,
 };
 
@@ -33,14 +37,14 @@ export const useVotingStore = create<VotingState & VotingActions>((set, get) => 
   ...initialState,
 
   fetchCurrentTopic: async () => {
-    set({ isLoading: true });
+    set({ isTopicLoading: true });
     try {
       const topic = await getCurrentTopic();
       set({ currentTopic: topic });
     } catch (error) {
       console.error('Failed to fetch current topic:', error);
     } finally {
-      set({ isLoading: false });
+      set({ isTopicLoading: false });
     }
   },
 
@@ -57,7 +61,7 @@ export const useVotingStore = create<VotingState & VotingActions>((set, get) => 
     const topic = get().currentTopic;
     if (!topic) return;
 
-    set({ isLoading: true });
+    set({ isVoting: true });
     try {
       await voteTopic(topic.id, choice);
       set({ currentTopic: { ...topic, myVote: choice } });
@@ -65,19 +69,19 @@ export const useVotingStore = create<VotingState & VotingActions>((set, get) => 
       console.error('Failed to vote:', error);
       throw error;
     } finally {
-      set({ isLoading: false });
+      set({ isVoting: false });
     }
   },
 
   fetchResult: async (topicId: string) => {
-    set({ isLoading: true });
+    set({ isResultLoading: true });
     try {
       const result = await getTopicResult(topicId);
       set({ result });
     } catch (error) {
       console.error('Failed to fetch result:', error);
     } finally {
-      set({ isLoading: false });
+      set({ isResultLoading: false });
     }
   },
 

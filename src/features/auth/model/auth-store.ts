@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import type { User, AuthTokens } from '@/src/shared/types';
 import { getAccessToken, getRefreshToken, setTokens, clearTokens } from '@/src/shared/lib/auth';
-import { apiPost } from '@/src/shared/api/client';
+import { apiPost, refreshTokens } from '@/src/shared/api/client';
 import { getMyProfile } from '@/src/entities/user';
 
 type AuthState = {
@@ -9,6 +9,7 @@ type AuthState = {
   isAuthenticated: boolean;
   isLoading: boolean;
   needsSignup: boolean;
+  authReady: boolean;
 };
 
 type AuthActions = {
@@ -24,6 +25,7 @@ export const useAuthStore = create<AuthState & AuthActions>((set, get) => ({
   isAuthenticated: false,
   isLoading: false,
   needsSignup: false,
+  authReady: false,
 
   signup: async (signupToken: string, nickname: string) => {
     set({ isLoading: true });
@@ -71,13 +73,21 @@ export const useAuthStore = create<AuthState & AuthActions>((set, get) => ({
     const refreshToken = getRefreshToken();
 
     if (!accessToken && !refreshToken) {
-      set({ user: null, isAuthenticated: false });
+      set({ user: null, isAuthenticated: false, authReady: true });
       return;
     }
 
-    // accessToken이 있으면 바로 유저 정보 조회
-    // 없지만 refreshToken이 있으면 apiClient가 자동으로 refresh 시도
+    // accessToken이 없으면 refreshToken으로 먼저 갱신
+    if (!accessToken && refreshToken) {
+      const refreshed = await refreshTokens();
+      if (!refreshed) {
+        set({ user: null, isAuthenticated: false, authReady: true });
+        return;
+      }
+    }
+
     await get().fetchUser();
+    set({ authReady: true });
   },
 
   setNeedsSignup: (val: boolean) => {

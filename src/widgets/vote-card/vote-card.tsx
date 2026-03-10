@@ -4,8 +4,9 @@ import { useEffect } from 'react';
 import Link from 'next/link';
 import type { Topic } from '@/src/shared/types';
 import { TopicStatus } from '@/src/shared/types';
-import { CountdownTimer, ProgressBar, Button } from '@/src/shared/ui';
+import { CountdownTimer, VotePieChart, Button } from '@/src/shared/ui';
 import { useVotingStore, VoteButtons } from '@/src/features/voting';
+import { useAuthStore } from '@/src/features/auth';
 
 type VoteCardProps = {
   topic: Topic;
@@ -14,11 +15,12 @@ type VoteCardProps = {
 export function VoteCard({ topic }: VoteCardProps) {
   const result = useVotingStore((s) => s.result);
   const fetchResult = useVotingStore((s) => s.fetchResult);
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
 
   const hasVoted = topic.myVote !== null;
 
   useEffect(() => {
-    // 투표 완료 상태이거나, CHATTING/CLOSED면 결과 조회
+    if (!isAuthenticated) return;
     if (
       hasVoted ||
       topic.status === TopicStatus.CHATTING ||
@@ -26,7 +28,7 @@ export function VoteCard({ topic }: VoteCardProps) {
     ) {
       fetchResult(topic.id);
     }
-  }, [topic.id, topic.status, hasVoted, fetchResult]);
+  }, [topic.id, topic.status, hasVoted, isAuthenticated, fetchResult]);
 
   return (
     <div className="rounded-2xl border border-border bg-surface p-6 shadow-sm">
@@ -52,31 +54,18 @@ export function VoteCard({ topic }: VoteCardProps) {
 
       {topic.status === TopicStatus.VOTING && hasVoted && (
         <div className="space-y-4">
-          {result && (
-            <ProgressBar
-              goodCount={result.good.count}
-              evilCount={result.evil.count}
-            />
-          )}
+          {result && <VotePieChart result={result} />}
 
-          <div className="flex items-center justify-between text-[12px] font-medium leading-[1.4] text-caption">
-            <span>
-              남은 시간:{' '}
-              <CountdownTimer targetDate={topic.votingEndsAt} />
-            </span>
-            {result && <span>총 {result.total}표</span>}
+          <div className="text-center text-[12px] font-medium leading-[1.4] text-caption">
+            남은 시간:{' '}
+            <CountdownTimer targetDate={topic.votingEndsAt} />
           </div>
         </div>
       )}
 
       {topic.status === TopicStatus.CHATTING && (
         <div className="space-y-4">
-          {result && (
-            <ProgressBar
-              goodCount={result.good.count}
-              evilCount={result.evil.count}
-            />
-          )}
+          {result && <VotePieChart result={result} />}
 
           <Link href={`/topics/${topic.id}`}>
             <Button fullWidth>토론 참여하기</Button>
@@ -104,12 +93,7 @@ export function VoteCard({ topic }: VoteCardProps) {
 
       {topic.status === TopicStatus.CLOSED && (
         <div className="space-y-4">
-          {result && (
-            <ProgressBar
-              goodCount={result.good.count}
-              evilCount={result.evil.count}
-            />
-          )}
+          {result && <VotePieChart result={result} />}
 
           <span className="inline-block rounded-full bg-border px-3 py-1 text-[10px] font-medium text-muted">
             종료됨

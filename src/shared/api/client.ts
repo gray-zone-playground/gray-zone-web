@@ -24,6 +24,11 @@ function authHeaders(): Record<string, string> {
   return token ? { Authorization: `Bearer ${token}` } : {};
 }
 
+/** 외부에서 직접 토큰 갱신이 필요할 때 사용 (checkAuth 등) */
+export async function refreshTokens(): Promise<boolean> {
+  return refreshAccessToken();
+}
+
 async function refreshAccessToken(): Promise<boolean> {
   const refreshToken = getRefreshToken();
   if (!refreshToken) return false;
