@@ -17,9 +17,9 @@ type ButtonProps = {
 
 const variantStyles: Record<ButtonVariant, string> = {
   primary:
-    'bg-gray-900 text-white hover:bg-gray-800 disabled:bg-gray-300',
+    'bg-heading text-surface hover:opacity-90 disabled:bg-border disabled:text-muted',
   secondary:
-    'bg-gray-200 text-gray-800 hover:bg-gray-300 disabled:bg-gray-100 disabled:text-gray-400',
+    'bg-border text-foreground hover:bg-surface-hover disabled:bg-background disabled:text-muted',
   kakao:
     'bg-[#FEE500] text-[#191919] hover:bg-[#FDD800] disabled:bg-[#FEE500]/50',
   danger:
@@ -49,7 +49,7 @@ export function Button({
       onClick={onClick}
       className={`
         inline-flex items-center justify-center font-semibold transition-colors duration-150
-        focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400
+        focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-muted
         disabled:cursor-not-allowed
         ${variantStyles[variant]}
         ${sizeStyles[size]}

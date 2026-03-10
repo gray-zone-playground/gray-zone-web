@@ -67,30 +67,30 @@ export default function ProfilePage() {
       <main className="mx-auto max-w-lg px-4 py-6">
         {/* User Info */}
         <section className="rounded-lg border border-border bg-surface p-6">
-          <h2 className="mb-4 text-[18px] font-semibold leading-[1.4] text-gray-900">
+          <h2 className="mb-4 text-[18px] font-semibold leading-[1.4] text-heading">
             내 정보
           </h2>
           <div className="flex flex-col gap-3 text-[14px] leading-[1.6]">
             <div className="flex justify-between">
-              <span className="text-gray-500">닉네임</span>
-              <span className="text-gray-700">{user.nickname}</span>
+              <span className="text-caption">닉네임</span>
+              <span className="text-foreground">{user.nickname}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-gray-500">가입일</span>
-              <span className="text-gray-700">
+              <span className="text-caption">가입일</span>
+              <span className="text-foreground">
                 {formatDate(user.createdAt)}
               </span>
             </div>
             <div className="flex justify-between">
-              <span className="text-gray-500">투표 수</span>
-              <span className="text-gray-700">-</span>
+              <span className="text-caption">투표 수</span>
+              <span className="text-foreground">-</span>
             </div>
           </div>
         </section>
 
         {/* Nickname Change */}
         <section className="mt-4 rounded-lg border border-border bg-surface p-6">
-          <h2 className="mb-4 text-[18px] font-semibold leading-[1.4] text-gray-900">
+          <h2 className="mb-4 text-[18px] font-semibold leading-[1.4] text-heading">
             닉네임 변경
           </h2>
           <div className="flex gap-2">

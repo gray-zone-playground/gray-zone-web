@@ -47,7 +47,7 @@ export function VoteButtons({
           hasVoted && selectedChoice === VoteChoice.GOOD
             ? 'bg-info-500 text-white ring-2 ring-info-500/40'
             : hasVoted
-              ? 'bg-gray-100 text-gray-400'
+              ? 'bg-background text-muted'
               : 'bg-info-100 text-info-900 hover:bg-info-500/20'
         } disabled:cursor-not-allowed`}
       >
@@ -61,7 +61,7 @@ export function VoteButtons({
           hasVoted && selectedChoice === VoteChoice.EVIL
             ? 'bg-error-500 text-white ring-2 ring-error-500/40'
             : hasVoted
-              ? 'bg-gray-100 text-gray-400'
+              ? 'bg-background text-muted'
               : 'bg-error-100 text-error-900 hover:bg-error-500/20'
         } disabled:cursor-not-allowed`}
       >

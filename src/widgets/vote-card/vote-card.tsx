@@ -27,7 +27,7 @@ export function VoteCard({ topic }: VoteCardProps) {
 
   return (
     <div className="rounded-2xl border border-border bg-surface p-6 shadow-sm">
-      <h2 className="mb-4 text-[18px] font-semibold leading-[1.4] text-gray-900">
+      <h2 className="mb-4 text-[18px] font-semibold leading-[1.4] text-heading">
         {topic.title}
       </h2>
 
@@ -39,7 +39,7 @@ export function VoteCard({ topic }: VoteCardProps) {
             topicId={topic.id}
           />
 
-          <div className="flex items-center justify-between text-[12px] font-medium leading-[1.4] text-gray-500">
+          <div className="flex items-center justify-between text-[12px] font-medium leading-[1.4] text-caption">
             <span>
               남은 시간:{' '}
               <CountdownTimer targetDate={topic.closedAt} />
@@ -64,7 +64,7 @@ export function VoteCard({ topic }: VoteCardProps) {
             <Button fullWidth>토론 참여하기</Button>
           </Link>
 
-          <div className="text-center text-[12px] font-medium leading-[1.4] text-gray-500">
+          <div className="text-center text-[12px] font-medium leading-[1.4] text-caption">
             토론 종료까지:{' '}
             <CountdownTimer targetDate={topic.chatClosedAt} />
           </div>
@@ -77,7 +77,7 @@ export function VoteCard({ topic }: VoteCardProps) {
             투표 예정
           </span>
 
-          <div className="text-[14px] font-normal leading-[1.6] text-gray-500">
+          <div className="text-[14px] font-normal leading-[1.6] text-caption">
             시작까지:{' '}
             <CountdownTimer targetDate={topic.scheduledAt} />
           </div>
@@ -93,7 +93,7 @@ export function VoteCard({ topic }: VoteCardProps) {
             />
           )}
 
-          <span className="inline-block rounded-full bg-gray-200 px-3 py-1 text-[10px] font-medium text-gray-600">
+          <span className="inline-block rounded-full bg-border px-3 py-1 text-[10px] font-medium text-muted">
             종료됨
           </span>
         </div>

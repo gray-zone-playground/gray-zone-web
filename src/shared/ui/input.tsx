@@ -16,7 +16,7 @@ export function Input({ label, error, className = '', id, ...rest }: InputProps)
       {label && (
         <label
           htmlFor={inputId}
-          className="text-[14px] font-medium leading-[1.6] text-gray-700"
+          className="text-[14px] font-medium leading-[1.6] text-foreground"
         >
           {label}
         </label>
@@ -25,10 +25,10 @@ export function Input({ label, error, className = '', id, ...rest }: InputProps)
         id={inputId}
         className={`
           w-full rounded-lg border px-3 py-2 text-[14px] leading-[1.6]
-          bg-white text-gray-800 border-gray-200
-          placeholder:text-gray-400
-          focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-gray-400
-          disabled:bg-gray-100 disabled:cursor-not-allowed disabled:text-gray-400
+          bg-surface text-foreground border-border
+          placeholder:text-muted
+          focus:outline-none focus:ring-2 focus:ring-muted focus:border-muted
+          disabled:bg-background disabled:cursor-not-allowed disabled:text-muted
           ${error ? 'border-error-500 focus:ring-error-500' : ''}
           ${className}
         `.trim()}

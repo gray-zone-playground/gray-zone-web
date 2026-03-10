@@ -27,7 +27,7 @@ export function ChatRoom({ topicId, canChat }: ChatRoomProps) {
 
   if (!canChat) {
     return (
-      <div className="flex items-center justify-center rounded-2xl border border-border bg-gray-100 p-8 text-[14px] text-gray-500">
+      <div className="flex items-center justify-center rounded-2xl border border-border bg-background p-8 text-[14px] text-caption">
         투표 참여자만 채팅할 수 있습니다
       </div>
     );

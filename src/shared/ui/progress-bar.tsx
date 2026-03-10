@@ -19,7 +19,7 @@ export function ProgressBar({ goodCount, evilCount, className = '' }: ProgressBa
         <span className="text-error-500">{evilPct}%</span>
       </div>
 
-      <div className="flex h-4 w-full overflow-hidden rounded-full bg-gray-200">
+      <div className="flex h-4 w-full overflow-hidden rounded-full bg-border">
         <div
           className="flex items-center justify-center bg-info-500 text-[10px] font-bold text-white transition-all duration-500 ease-out"
           style={{ width: `${goodPct}%` }}

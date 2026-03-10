@@ -52,7 +52,7 @@ export function ResultView({ topicId }: ResultViewProps) {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center py-12 text-[14px] text-gray-500">
+      <div className="flex items-center justify-center py-12 text-[14px] text-caption">
         결과를 불러오는 중...
       </div>
     );
@@ -60,7 +60,7 @@ export function ResultView({ topicId }: ResultViewProps) {
 
   if (!result) {
     return (
-      <div className="flex items-center justify-center py-12 text-[14px] text-gray-500">
+      <div className="flex items-center justify-center py-12 text-[14px] text-caption">
         결과가 없습니다.
       </div>
     );
@@ -69,7 +69,7 @@ export function ResultView({ topicId }: ResultViewProps) {
   return (
     <div className="space-y-6 rounded-2xl border border-border bg-surface p-6 shadow-sm">
       {currentTopic && (
-        <h2 className="text-[18px] font-semibold leading-[1.4] text-gray-900">
+        <h2 className="text-[18px] font-semibold leading-[1.4] text-heading">
           {currentTopic.title}
         </h2>
       )}
@@ -91,9 +91,9 @@ export function ResultView({ topicId }: ResultViewProps) {
         </div>
       </div>
 
-      <div className="text-center text-[14px] text-gray-500">
+      <div className="text-center text-[14px] text-caption">
         총 참여자:{' '}
-        <span className="font-semibold text-gray-700">
+        <span className="font-semibold text-foreground">
           <AnimatedNumber value={result.totalCount} />
         </span>
         명

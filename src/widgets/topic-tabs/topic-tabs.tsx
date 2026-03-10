@@ -9,7 +9,7 @@ type TopicTabsProps = {
 
 export function TopicTabs({ activeIndex, onTabChange }: TopicTabsProps) {
   return (
-    <div className="inline-flex gap-2 rounded-full bg-gray-200 p-1">
+    <div className="inline-flex gap-2 rounded-full bg-border p-1">
       {TIME_SLOTS.map((time, index) => {
         const isActive = index === activeIndex;
 
@@ -20,8 +20,8 @@ export function TopicTabs({ activeIndex, onTabChange }: TopicTabsProps) {
             onClick={() => onTabChange(index)}
             className={`rounded-full px-5 py-2 text-[14px] font-semibold leading-[1.6] transition-all ${
               isActive
-                ? 'bg-gray-900 text-white shadow-sm'
-                : 'text-gray-600 hover:text-gray-900'
+                ? 'bg-heading text-surface shadow-sm'
+                : 'text-muted hover:text-heading'
             }`}
           >
             {time}

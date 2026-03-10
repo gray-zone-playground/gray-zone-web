@@ -28,18 +28,18 @@ export default function Home() {
       <main className="mx-auto max-w-lg px-4 py-6">
         {isLoading ? (
           <div className="flex items-center justify-center py-20">
-            <div className="text-[14px] text-gray-500">Loading...</div>
+            <div className="text-[14px] text-caption">Loading...</div>
           </div>
         ) : currentTopic ? (
           <VoteCard topic={currentTopic} />
         ) : (
           <div className="flex flex-col items-center justify-center gap-6 py-20">
-            <p className="text-[14px] text-gray-500">
+            <p className="text-[14px] text-caption">
               현재 진행 중인 투표가 없습니다
             </p>
             {nextScheduledAt && (
               <div className="flex flex-col items-center gap-2">
-                <p className="text-[12px] text-gray-500">다음 투표까지</p>
+                <p className="text-[12px] text-caption">다음 투표까지</p>
                 <CountdownTimer targetDate={nextScheduledAt} />
               </div>
             )}

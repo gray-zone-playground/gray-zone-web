@@ -51,7 +51,7 @@ export function NicknameForm({ kakaoId }: NicknameFormProps) {
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
       <div className="flex flex-col gap-2">
-        <label htmlFor="nickname" className="text-[14px] font-medium leading-[1.6] text-gray-700">
+        <label htmlFor="nickname" className="text-[14px] font-medium leading-[1.6] text-foreground">
           닉네임
         </label>
         <input
@@ -61,8 +61,8 @@ export function NicknameForm({ kakaoId }: NicknameFormProps) {
           onChange={handleChange}
           placeholder="한글/영문/숫자 2-10자"
           maxLength={10}
-          className={`rounded-lg border bg-white px-4 py-3 text-[14px] leading-[1.6] text-gray-800 outline-none transition-colors placeholder:text-gray-400 focus:ring-2 focus:ring-gray-400 ${
-            error ? 'border-error-500' : 'border-gray-200'
+          className={`rounded-lg border bg-surface px-4 py-3 text-[14px] leading-[1.6] text-foreground outline-none transition-colors placeholder:text-muted focus:ring-2 focus:ring-muted ${
+            error ? 'border-error-500' : 'border-border'
           }`}
         />
         {error && <p className="text-[12px] font-medium text-error-500">{error}</p>}
@@ -70,7 +70,7 @@ export function NicknameForm({ kakaoId }: NicknameFormProps) {
       <button
         type="submit"
         disabled={isLoading}
-        className="rounded-lg bg-gray-900 px-6 py-3 text-[16px] font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-50"
+        className="rounded-lg bg-heading px-6 py-3 text-[16px] font-semibold text-surface transition-opacity hover:opacity-90 disabled:opacity-50"
       >
         {isLoading ? '처리 중...' : '시작하기'}
       </button>

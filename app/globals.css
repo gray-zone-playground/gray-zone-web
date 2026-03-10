@@ -56,6 +56,17 @@
   --muted: var(--gray-500);
 }
 
+.dark {
+  --background: var(--gray-900);
+  --foreground: var(--gray-300);
+  --heading: var(--gray-100);
+  --caption: var(--gray-400);
+  --surface: var(--gray-800);
+  --surface-hover: var(--gray-700);
+  --border: var(--gray-700);
+  --muted: var(--gray-500);
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);

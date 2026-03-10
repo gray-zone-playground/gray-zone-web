@@ -24,7 +24,7 @@ export function ChatMessageList({ messages }: ChatMessageListProps) {
 
   if (messages.length === 0) {
     return (
-      <div className="flex flex-1 items-center justify-center text-[14px] text-gray-400">
+      <div className="flex flex-1 items-center justify-center text-[14px] text-muted">
         아직 메시지가 없습니다.
       </div>
     );
@@ -34,11 +34,11 @@ export function ChatMessageList({ messages }: ChatMessageListProps) {
     <div className="flex flex-1 flex-col gap-2 overflow-y-auto p-4">
       {messages.map((msg) => (
         <div key={msg.id} className="flex items-start gap-2">
-          <span className="shrink-0 text-[14px] font-semibold text-gray-800">
+          <span className="shrink-0 text-[14px] font-semibold text-foreground">
             {msg.nickname}
           </span>
-          <span className="text-[14px] text-gray-700">{msg.message}</span>
-          <span className="ml-auto shrink-0 text-[10px] text-gray-400">
+          <span className="text-[14px] text-foreground">{msg.message}</span>
+          <span className="ml-auto shrink-0 text-[10px] text-muted">
             {formatTime(msg.createdAt)}
           </span>
         </div>
