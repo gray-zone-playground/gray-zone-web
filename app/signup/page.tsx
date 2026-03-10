@@ -1,20 +1,21 @@
 "use client";
 
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { useAuthStore, NicknameForm } from "@/src/features/auth";
+import { Suspense, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { NicknameForm } from "@/src/features/auth";
 
-export default function SignupPage() {
+function SignupContent() {
   const router = useRouter();
-  const needsSignup = useAuthStore((s) => s.needsSignup);
+  const searchParams = useSearchParams();
+  const kakaoId = searchParams.get("kakaoId");
 
   useEffect(() => {
-    if (!needsSignup) {
-      router.replace("/");
+    if (!kakaoId) {
+      router.replace("/login");
     }
-  }, [needsSignup, router]);
+  }, [kakaoId, router]);
 
-  if (!needsSignup) return null;
+  if (!kakaoId) return null;
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-background px-4">
@@ -28,8 +29,22 @@ export default function SignupPage() {
           </p>
         </div>
 
-        <NicknameForm />
+        <NicknameForm kakaoId={kakaoId} />
       </div>
     </div>
+  );
+}
+
+export default function SignupPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex min-h-screen items-center justify-center bg-background">
+          <p className="text-[14px] text-gray-500">로딩 중...</p>
+        </div>
+      }
+    >
+      <SignupContent />
+    </Suspense>
   );
 }
