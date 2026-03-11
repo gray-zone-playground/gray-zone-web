@@ -19,12 +19,23 @@ export default function Home() {
     return 2;
   });
 
+  const subscribeTopicStatus = useVotingStore((s) => s.subscribeTopicStatus);
+  const unsubscribeTopicStatus = useVotingStore((s) => s.unsubscribeTopicStatus);
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+
   // 인증 상태 확인 후 토픽 fetch (myVote를 정확히 받기 위해)
   useEffect(() => {
     if (!authReady) return;
     fetchCurrentTopic();
     fetchNextTopic();
   }, [authReady, fetchCurrentTopic, fetchNextTopic]);
+
+  // 인증된 사용자만 topic 소켓 구독
+  useEffect(() => {
+    if (!authReady || !isAuthenticated) return;
+    subscribeTopicStatus();
+    return () => unsubscribeTopicStatus();
+  }, [authReady, isAuthenticated, subscribeTopicStatus, unsubscribeTopicStatus]);
 
   return (
     <div className="min-h-screen bg-background">

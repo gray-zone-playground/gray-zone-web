@@ -9,6 +9,7 @@ import { ChatRoom } from "@/src/widgets/chat-room";
 import { CountdownTimer } from "@/src/shared/ui";
 import { TopicStatus } from "@/src/shared/types";
 import { useVotingStore } from "@/src/features/voting";
+import { useAuthStore } from "@/src/features/auth";
 
 export default function TopicDetailPage() {
   const params = useParams();
@@ -17,12 +18,23 @@ export default function TopicDetailPage() {
 
   const { currentTopic, isTopicLoading, fetchResult, fetchCurrentTopic } =
     useVotingStore();
+  const subscribeTopicStatus = useVotingStore((s) => s.subscribeTopicStatus);
+  const unsubscribeTopicStatus = useVotingStore((s) => s.unsubscribeTopicStatus);
+  const authReady = useAuthStore((s) => s.authReady);
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   const [isClosed, setIsClosed] = useState(false);
 
   useEffect(() => {
     fetchCurrentTopic();
     fetchResult(topicId);
   }, [topicId, fetchResult, fetchCurrentTopic]);
+
+  // topic 소켓 구독
+  useEffect(() => {
+    if (!authReady || !isAuthenticated) return;
+    subscribeTopicStatus();
+    return () => unsubscribeTopicStatus();
+  }, [authReady, isAuthenticated, subscribeTopicStatus, unsubscribeTopicStatus]);
 
   const canChat =
     currentTopic?.myVote !== null &&

@@ -5,7 +5,8 @@
       "Bash(npx next build)",
       "Bash(npm run build:*)",
       "Bash(curl:*)",
-      "Bash(node -e:*)"
+      "Bash(node -e:*)",
+      "Bash(npx tsc:*)"
     ]
   }
 }

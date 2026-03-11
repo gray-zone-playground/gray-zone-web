@@ -1,11 +1,18 @@
 import { create } from 'zustand';
-import type { Topic, TopicResult, VoteChoice } from '@/src/shared/types';
+import type { Topic, TopicResult, TopicStatus, VoteChoice } from '@/src/shared/types';
 import {
   getCurrentTopic,
   getNextTopic,
   voteTopic,
   getTopicResult,
 } from '@/src/entities/topic';
+import { connectSocket, disconnectSocket, getSocket } from '@/src/shared/lib/socket';
+import { getAccessToken } from '@/src/shared/lib/auth';
+
+type TopicStatusPayload = {
+  topicId: string;
+  status: TopicStatus;
+};
 
 type VotingState = {
   currentTopic: Topic | null;
@@ -21,6 +28,8 @@ type VotingActions = {
   fetchNextTopic: () => Promise<void>;
   vote: (choice: VoteChoice) => Promise<void>;
   fetchResult: (topicId: string) => Promise<void>;
+  subscribeTopicStatus: () => void;
+  unsubscribeTopicStatus: () => void;
   reset: () => void;
 };
 
@@ -85,7 +94,47 @@ export const useVotingStore = create<VotingState & VotingActions>((set, get) => 
     }
   },
 
+  subscribeTopicStatus: () => {
+    const token = getAccessToken();
+    if (!token) return;
+
+    const socket = connectSocket(token);
+
+    socket.off('topic:statusChanged');
+
+    socket.on('topic:statusChanged', (payload: TopicStatusPayload) => {
+      const { currentTopic, nextTopic } = get();
+
+      // 현재 토픽의 상태가 변경된 경우
+      if (currentTopic && currentTopic.id === payload.topicId) {
+        set({ currentTopic: { ...currentTopic, status: payload.status } });
+        return;
+      }
+
+      // 예정된 토픽이 VOTING으로 전환된 경우 → currentTopic으로 승격
+      if (nextTopic && nextTopic.id === payload.topicId) {
+        set({
+          currentTopic: { ...nextTopic, status: payload.status },
+          nextTopic: null,
+        });
+        return;
+      }
+
+      // 알 수 없는 토픽 → 서버에서 최신 데이터 조회
+      get().fetchCurrentTopic();
+      get().fetchNextTopic();
+    });
+  },
+
+  unsubscribeTopicStatus: () => {
+    const socket = getSocket();
+    if (socket) {
+      socket.off('topic:statusChanged');
+    }
+  },
+
   reset: () => {
+    get().unsubscribeTopicStatus();
     set(initialState);
   },
 }));
