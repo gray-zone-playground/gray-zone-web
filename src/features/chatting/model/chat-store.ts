@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import type { ChatMessage } from '@/src/shared/types';
 import { getAccessToken } from '@/src/shared/lib/auth';
 import { getChatMessages } from '@/src/entities/chat';
-import { connectSocket, disconnectSocket, getSocket } from '../lib/socket';
+import { connectSocket, getSocket } from '../lib/socket';
 
 type ChatState = {
   messages: ChatMessage[];
@@ -64,14 +64,11 @@ export const useChatStore = create<ChatState & ChatActions>((set, get) => ({
     const socket = getSocket();
     if (socket) {
       socket.emit('chat:leave', { topicId });
-      socket.off('connect');
-      socket.off('disconnect');
       socket.off('chat:receive');
       socket.off('chat:closed');
       socket.off('chat:error');
     }
-    disconnectSocket();
-    set({ messages: [], isConnected: false });
+    set({ messages: [], isConnected: false, isChatOpen: true });
   },
 
   sendMessage: (topicId: string, message: string) => {
@@ -90,7 +87,10 @@ export const useChatStore = create<ChatState & ChatActions>((set, get) => ({
   },
 
   addMessage: (msg: ChatMessage) => {
-    set((state) => ({ messages: [...state.messages, msg] }));
+    set((state) => {
+      if (state.messages.some((m) => m.id === msg.id)) return state;
+      return { messages: [...state.messages, msg] };
+    });
   },
 
   setChatClosed: () => {

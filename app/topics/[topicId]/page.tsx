@@ -10,46 +10,49 @@ import { CountdownTimer } from "@/src/shared/ui";
 import { TopicStatus } from "@/src/shared/types";
 import { useVotingStore } from "@/src/features/voting";
 import { useAuthStore } from "@/src/features/auth";
+import { useChatStore } from "@/src/features/chatting";
 
 export default function TopicDetailPage() {
   const params = useParams();
   const router = useRouter();
   const topicId = params.topicId as string;
 
-  const { currentTopic, isTopicLoading, fetchResult, fetchCurrentTopic } =
-    useVotingStore();
-  const subscribeTopicStatus = useVotingStore((s) => s.subscribeTopicStatus);
-  const unsubscribeTopicStatus = useVotingStore((s) => s.unsubscribeTopicStatus);
+  const currentTopic = useVotingStore((s) => s.currentTopic);
+  const isTopicLoading = useVotingStore((s) => s.isTopicLoading);
   const authReady = useAuthStore((s) => s.authReady);
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+  const isChatOpen = useChatStore((s) => s.isChatOpen);
   const [isClosed, setIsClosed] = useState(false);
 
   useEffect(() => {
+    const { fetchCurrentTopic, fetchResult } = useVotingStore.getState();
     fetchCurrentTopic();
     fetchResult(topicId);
-  }, [topicId, fetchResult, fetchCurrentTopic]);
+  }, [topicId]);
 
   // topic 소켓 구독
   useEffect(() => {
     if (!authReady || !isAuthenticated) return;
+    const { subscribeTopicStatus, unsubscribeTopicStatus } = useVotingStore.getState();
     subscribeTopicStatus();
     return () => unsubscribeTopicStatus();
-  }, [authReady, isAuthenticated, subscribeTopicStatus, unsubscribeTopicStatus]);
+  }, [authReady, isAuthenticated]);
 
   const canChat =
     currentTopic?.myVote !== null &&
     currentTopic?.myVote !== undefined &&
     currentTopic?.status === TopicStatus.CHATTING;
 
+  // 채팅 종료 시 (topic:statusChanged 또는 chat:closed) → 홈으로 이동
   useEffect(() => {
-    if (currentTopic?.status === TopicStatus.CLOSED) {
+    if (currentTopic?.status === TopicStatus.CLOSED || !isChatOpen) {
       setIsClosed(true);
       const timer = setTimeout(() => {
         router.replace("/");
       }, 3000);
       return () => clearTimeout(timer);
     }
-  }, [currentTopic?.status, router]);
+  }, [currentTopic?.status, isChatOpen, router]);
 
   return (
     <div className="min-h-screen bg-background">

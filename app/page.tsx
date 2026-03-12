@@ -1,41 +1,44 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { GNB } from "@/src/widgets/gnb";
 import { VoteCard } from "@/src/widgets/vote-card";
-import { TopicTabs } from "@/src/widgets/topic-tabs";
 import { CountdownTimer } from "@/src/shared/ui";
 import { useVotingStore } from "@/src/features/voting";
 import { useAuthStore } from "@/src/features/auth";
+import { TopicStatus } from "@/src/shared/types";
 
 export default function Home() {
+  const router = useRouter();
   const authReady = useAuthStore((s) => s.authReady);
-  const { currentTopic, nextTopic, isTopicLoading, fetchCurrentTopic, fetchNextTopic } =
-    useVotingStore();
-  const [activeTab, setActiveTab] = useState(() => {
-    const hour = new Date().getHours();
-    if (hour < 12) return 0;
-    if (hour < 20) return 1;
-    return 2;
-  });
-
-  const subscribeTopicStatus = useVotingStore((s) => s.subscribeTopicStatus);
-  const unsubscribeTopicStatus = useVotingStore((s) => s.unsubscribeTopicStatus);
+  const currentTopic = useVotingStore((s) => s.currentTopic);
+  const nextTopic = useVotingStore((s) => s.nextTopic);
+  const isTopicLoading = useVotingStore((s) => s.isTopicLoading);
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
 
-  // 인증 상태 확인 후 토픽 fetch (myVote를 정확히 받기 위해)
+  // 인증 상태 확인 후 토픽 fetch
   useEffect(() => {
     if (!authReady) return;
+    const { fetchCurrentTopic, fetchNextTopic } = useVotingStore.getState();
     fetchCurrentTopic();
     fetchNextTopic();
-  }, [authReady, fetchCurrentTopic, fetchNextTopic]);
+  }, [authReady]);
 
   // 인증된 사용자만 topic 소켓 구독
   useEffect(() => {
     if (!authReady || !isAuthenticated) return;
+    const { subscribeTopicStatus, unsubscribeTopicStatus } = useVotingStore.getState();
     subscribeTopicStatus();
     return () => unsubscribeTopicStatus();
-  }, [authReady, isAuthenticated, subscribeTopicStatus, unsubscribeTopicStatus]);
+  }, [authReady, isAuthenticated]);
+
+  // CHATTING 상태면 자동으로 채팅 페이지로 이동
+  useEffect(() => {
+    if (currentTopic?.status === TopicStatus.CHATTING) {
+      router.push(`/topics/${currentTopic.id}`);
+    }
+  }, [currentTopic?.status, currentTopic?.id, router]);
 
   return (
     <div className="min-h-screen bg-background">
@@ -60,10 +63,6 @@ export default function Home() {
             )}
           </div>
         )}
-
-        <div className="mt-6 flex justify-center">
-          <TopicTabs activeIndex={activeTab} onTabChange={setActiveTab} />
-        </div>
       </main>
     </div>
   );

@@ -47,23 +47,13 @@ export const useVotingStore = create<VotingState & VotingActions>((set, get) => 
 
   fetchCurrentTopic: async () => {
     set({ isTopicLoading: true });
-    try {
-      const topic = await getCurrentTopic();
-      set({ currentTopic: topic });
-    } catch (error) {
-      console.error('Failed to fetch current topic:', error);
-    } finally {
-      set({ isTopicLoading: false });
-    }
+    const topic = await getCurrentTopic();
+    set({ currentTopic: topic, isTopicLoading: false });
   },
 
   fetchNextTopic: async () => {
-    try {
-      const topic = await getNextTopic();
-      set({ nextTopic: topic });
-    } catch (error) {
-      console.error('Failed to fetch next topic:', error);
-    }
+    const topic = await getNextTopic();
+    set({ nextTopic: topic });
   },
 
   vote: async (choice: VoteChoice) => {

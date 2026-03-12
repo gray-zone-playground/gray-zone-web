@@ -10,20 +10,19 @@ type ChatRoomProps = {
 
 export function ChatRoom({ topicId, canChat }: ChatRoomProps) {
   const messages = useChatStore((s) => s.messages);
-  const joinChat = useChatStore((s) => s.joinChat);
-  const leaveChat = useChatStore((s) => s.leaveChat);
-  const loadMessages = useChatStore((s) => s.loadMessages);
+  const isChatOpen = useChatStore((s) => s.isChatOpen);
 
   useEffect(() => {
     if (!canChat) return;
 
+    const { loadMessages, joinChat, leaveChat } = useChatStore.getState();
     loadMessages(topicId);
     joinChat(topicId);
 
     return () => {
       leaveChat(topicId);
     };
-  }, [topicId, canChat, joinChat, leaveChat, loadMessages]);
+  }, [topicId, canChat]);
 
   if (!canChat) {
     return (
@@ -40,7 +39,7 @@ export function ChatRoom({ topicId, canChat }: ChatRoomProps) {
       </div>
 
       <div className="border-t border-border p-3">
-        <ChatInput topicId={topicId} />
+        <ChatInput topicId={topicId} disabled={!isChatOpen} />
       </div>
     </div>
   );

@@ -72,7 +72,12 @@ async function request<T>(method: string, path: string, options: RequestOptions 
     config.body = JSON.stringify(options.body);
   }
 
-  let res = await fetch(url, config);
+  let res: Response;
+  try {
+    res = await fetch(url, config);
+  } catch {
+    throw new Error(`네트워크 연결에 실패했습니다 (${method} ${path})`);
+  }
 
   // If 401, attempt token refresh and retry once
   if (res.status === 401) {

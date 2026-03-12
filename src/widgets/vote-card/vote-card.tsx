@@ -1,10 +1,9 @@
 'use client';
 
 import { useEffect } from 'react';
-import Link from 'next/link';
 import type { Topic } from '@/src/shared/types';
 import { TopicStatus } from '@/src/shared/types';
-import { CountdownTimer, VotePieChart, Button } from '@/src/shared/ui';
+import { CountdownTimer, VotePieChart } from '@/src/shared/ui';
 import { useVotingStore, VoteButtons } from '@/src/features/voting';
 import { useAuthStore } from '@/src/features/auth';
 
@@ -59,21 +58,6 @@ export function VoteCard({ topic }: VoteCardProps) {
           <div className="text-center text-[12px] font-medium leading-[1.4] text-caption">
             남은 시간:{' '}
             <CountdownTimer targetDate={topic.votingEndsAt} />
-          </div>
-        </div>
-      )}
-
-      {topic.status === TopicStatus.CHATTING && (
-        <div className="space-y-4">
-          {result && <VotePieChart result={result} />}
-
-          <Link href={`/topics/${topic.id}`}>
-            <Button fullWidth>토론 참여하기</Button>
-          </Link>
-
-          <div className="text-center text-[12px] font-medium leading-[1.4] text-caption">
-            토론 종료까지:{' '}
-            <CountdownTimer targetDate={topic.chattingEndsAt} />
           </div>
         </div>
       )}
