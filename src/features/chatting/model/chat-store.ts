@@ -57,6 +57,11 @@ export const useChatStore = create<ChatState & ChatActions>((set, get) => ({
       console.error('Chat error:', err.message);
     });
 
+    // 이미 연결된 소켓이면 즉시 상태 반영
+    if (socket.connected) {
+      set({ isConnected: true });
+    }
+
     socket.emit('chat:join', { topicId });
   },
 

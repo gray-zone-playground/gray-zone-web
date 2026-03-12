@@ -10,7 +10,6 @@ type ChatRoomProps = {
 
 export function ChatRoom({ topicId, canChat }: ChatRoomProps) {
   const messages = useChatStore((s) => s.messages);
-  const isChatOpen = useChatStore((s) => s.isChatOpen);
 
   useEffect(() => {
     if (!canChat) return;
@@ -39,7 +38,7 @@ export function ChatRoom({ topicId, canChat }: ChatRoomProps) {
       </div>
 
       <div className="border-t border-border p-3">
-        <ChatInput topicId={topicId} disabled={!isChatOpen} />
+        <ChatInput topicId={topicId} />
       </div>
     </div>
   );
