@@ -14,6 +14,19 @@ type TopicStatusPayload = {
   status: TopicStatus;
 };
 
+type TopicCreatedPayload = {
+  id: string;
+  title: string;
+  status: TopicStatus;
+  scheduledAt: string;
+};
+
+type TopicVotedPayload = {
+  topicId: string;
+  good: number;
+  evil: number;
+};
+
 type VotingState = {
   currentTopic: Topic | null;
   nextTopic: Topic | null;
@@ -91,6 +104,8 @@ export const useVotingStore = create<VotingState & VotingActions>((set, get) => 
     const socket = connectSocket(token);
 
     socket.off('topic:statusChanged');
+    socket.off('topic:created');
+    socket.off('topic:voted');
 
     socket.on('topic:statusChanged', (payload: TopicStatusPayload) => {
       const { currentTopic, nextTopic } = get();
@@ -114,12 +129,49 @@ export const useVotingStore = create<VotingState & VotingActions>((set, get) => 
       get().fetchCurrentTopic();
       get().fetchNextTopic();
     });
+
+    // 새 토픽 생성 알림 → 서버에서 최신 데이터 조회
+    socket.on('topic:created', (_payload: TopicCreatedPayload) => {
+      get().fetchCurrentTopic();
+      get().fetchNextTopic();
+    });
+
+    // 실시간 투표 수 갱신
+    socket.on('topic:voted', (payload: TopicVotedPayload) => {
+      const { result, currentTopic } = get();
+
+      // 현재 보고 있는 토픽의 투표 결과 실시간 업데이트
+      if (result && result.topicId === payload.topicId) {
+        const total = payload.good + payload.evil;
+        set({
+          result: {
+            ...result,
+            total,
+            good: {
+              count: payload.good,
+              ratio: total > 0 ? payload.good / total : 0,
+            },
+            evil: {
+              count: payload.evil,
+              ratio: total > 0 ? payload.evil / total : 0,
+            },
+          },
+        });
+      }
+
+      // result가 아직 없지만 현재 토픽의 투표인 경우 → 결과 조회
+      if (!result && currentTopic && currentTopic.id === payload.topicId) {
+        get().fetchResult(payload.topicId);
+      }
+    });
   },
 
   unsubscribeTopicStatus: () => {
     const socket = getSocket();
     if (socket) {
       socket.off('topic:statusChanged');
+      socket.off('topic:created');
+      socket.off('topic:voted');
     }
   },
 
